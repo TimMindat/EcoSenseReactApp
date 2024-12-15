@@ -46,38 +46,12 @@ textarea {
   to { transform: translateY(0); }
 }
 
-/* Mobile form styles */
-input, select, textarea {
-  -webkit-appearance: none;
-  border-radius: 8px;
-  font-size: 16px; /* Prevent iOS zoom */
-}
-
 /* Safe area padding */
-.safe-top {
-  padding-top: var(--safe-area-inset-top);
-}
-
-.safe-bottom {
+.pb-safe {
   padding-bottom: var(--safe-area-inset-bottom);
 }
 
 /* Prevent pull-to-refresh */
 body {
   overscroll-behavior-y: contain;
-}
-
-/* Mobile-specific media queries */
-@media (max-width: 428px) {
-  .container {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-}
-
-@media (max-width: 320px) {
-  .container {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
 }
