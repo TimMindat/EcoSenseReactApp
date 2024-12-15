@@ -31,8 +31,24 @@ export function MobileNavLink({ to, icon: Icon, label, isActive }: MobileNavLink
       <motion.div
         initial={{ scale: 1 }}
         whileTap={{ scale: 0.9 }}
+        className="relative"
       >
         <Icon className="h-5 w-5" />
+        {isActive && (
+          <motion.div
+            layoutId="navIndicator"
+            className="absolute -bottom-1 left-1/2 w-1 h-1 bg-green-600 rounded-full"
+            initial={false}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 30
+            }}
+            style={{
+              transform: 'translateX(-50%)'
+            }}
+          />
+        )}
       </motion.div>
       <span className="text-xs font-medium">{label}</span>
     </Link>

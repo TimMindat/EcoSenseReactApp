@@ -1,21 +1,33 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Home, Wind, User, Settings } from 'lucide-react';
+import { Home, Wind, User, LogIn, UserPlus } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 import { MobileNavLink } from './MobileNavLink';
 import { useNavbarHeight } from '../../lib/hooks/useNavbarHeight';
 import { useKeyboardVisibility } from '../../lib/hooks/useKeyboardVisibility';
-
-const NAV_ITEMS = [
-  { path: '/', icon: Home, label: 'Home' },
-  { path: '/air-quality', icon: Wind, label: 'Air Quality' },
-  { path: '/profile', icon: User, label: 'Profile' },
-  { path: '/settings', icon: Settings, label: 'Settings' }
-];
 
 export function MobileNavbar() {
   const location = useLocation();
   const { navbarHeight } = useNavbarHeight();
   const { isKeyboardVisible } = useKeyboardVisibility();
+  const { user } = useAuth();
+
+  // Base navigation items that are always shown
+  const baseNavItems = [
+    { path: '/', icon: Home, label: 'Home' },
+    { path: '/air-quality', icon: Wind, label: 'Air Quality' },
+  ];
+
+  // Auth-specific navigation items
+  const authNavItems = user
+    ? [{ path: '/profile', icon: User, label: 'Profile' }]
+    : [
+        { path: '/login', icon: LogIn, label: 'Login' },
+        { path: '/signup', icon: UserPlus, label: 'Sign Up' }
+      ];
+
+  // Combine base and auth-specific items
+  const navItems = [...baseNavItems, ...authNavItems];
 
   if (isKeyboardVisible) {
     return null;
@@ -30,7 +42,7 @@ export function MobileNavbar() {
       }}
     >
       <div className="h-full max-w-lg mx-auto px-4 flex items-center justify-around">
-        {NAV_ITEMS.map(({ path, icon, label }) => (
+        {navItems.map(({ path, icon, label }) => (
           <MobileNavLink
             key={path}
             to={path}

@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { MobileContainer } from '../components/layout/MobileContainer';
 import { MobileInput } from '../components/form/MobileInput';
+import { PasswordInput } from '../components/form/PasswordInput';
+import { GoogleSignInButton } from '../components/auth/GoogleSignInButton';
 import { TouchFeedback } from '../components/ui/TouchFeedback';
 import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { useAuthRedirect } from '../lib/auth/hooks/useAuthRedirect';
-import { validateEmail, validatePassword } from '../lib/auth/utils/validation';
+import { validateEmail } from '../lib/auth/utils/validation';
 
 export function Login() {
   const navigate = useNavigate();
@@ -26,11 +28,6 @@ export function Login() {
 
     if (!validateEmail(email)) {
       setError('Please enter a valid email address');
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      setError('Password must be at least 6 characters');
       return;
     }
 
@@ -63,49 +60,63 @@ export function Login() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <MobileInput
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tim@mind.com"
-            autoComplete="email"
-            required
-          />
+        <div className="space-y-6">
+          <GoogleSignInButton />
 
-          <MobileInput
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-
-          <TouchFeedback>
-            <Button
-              type="submit"
-              loading={loading}
-              className="w-full h-12 text-base"
-            >
-              Sign In
-            </Button>
-          </TouchFeedback>
-
-          <div className="flex items-center justify-between text-sm">
-            <TouchFeedback>
-              <Link href="/forgot-password" className="text-green-600">
-                Forgot password?
-              </Link>
-            </TouchFeedback>
-            <TouchFeedback>
-              <Link href="/signup" className="text-green-600">
-                Create account
-              </Link>
-            </TouchFeedback>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with email
+              </span>
+            </div>
           </div>
-        </form>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <MobileInput
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tim@mind.com"
+              autoComplete="email"
+              required
+            />
+
+            <PasswordInput
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+
+            <TouchFeedback>
+              <Button
+                type="submit"
+                loading={loading}
+                className="w-full h-12 text-base"
+              >
+                Sign In
+              </Button>
+            </TouchFeedback>
+
+            <div className="flex items-center justify-between text-sm">
+              <TouchFeedback>
+                <Link href="/forgot-password" className="text-green-600">
+                  Forgot password?
+                </Link>
+              </TouchFeedback>
+              <TouchFeedback>
+                <Link href="/signup" className="text-green-600">
+                  Create account
+                </Link>
+              </TouchFeedback>
+            </div>
+          </form>
+        </div>
       </div>
     </MobileContainer>
   );
