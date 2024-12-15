@@ -1,0 +1,1 @@
+// Delete this file since we're using the modular structure in /firebase folder
