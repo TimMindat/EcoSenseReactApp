@@ -1,7 +1,7 @@
 export function isWebView(): boolean {
   const userAgent = navigator.userAgent.toLowerCase();
   
-  // Check for iOS WebView
+  // Check for iOS WebView 
   const isIOSWebView = /(iphone|ipod|ipad).*applewebkit(?!.*safari)/i.test(userAgent);
   
   // Check for Android WebView
