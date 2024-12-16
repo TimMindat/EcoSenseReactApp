@@ -1,0 +1,47 @@
+/* Performance optimizations */
+.reduce-motion * {
+  animation: none !important;
+  transition: none !important;
+}
+
+.low-res-images img {
+  image-rendering: optimizeSpeed;
+}
+
+/* Touch optimizations */
+@media (hover: none) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Hardware acceleration */
+.hardware-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth scrolling only when supported */
+@media (prefers-reduced-motion: no-preference) {
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Prevent pull-to-refresh */
+body {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimize tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Optimize font loading */
+@font-face {
+  font-display: swap;
+}
