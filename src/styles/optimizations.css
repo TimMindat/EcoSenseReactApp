@@ -8,19 +8,21 @@
   image-rendering: optimizeSpeed;
 }
 
-/* Touch optimizations */
-@media (hover: none) {
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-  }
-}
-
 /* Hardware acceleration */
 .hardware-accelerated {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+  will-change: transform;
+}
+
+/* Touch optimizations */
+@media (hover: none) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px;
+  }
 }
 
 /* Smooth scrolling only when supported */
@@ -44,4 +46,41 @@ body {
 /* Optimize font loading */
 @font-face {
   font-display: swap;
+}
+
+/* Optimize images */
+img {
+  content-visibility: auto;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Layer compositing */
+.composite-layer {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Paint containment */
+.contain-paint {
+  contain: paint;
+}
+
+/* Layout containment */
+.contain-layout {
+  contain: layout;
+}
+
+/* Content visibility */
+.content-visibility {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }

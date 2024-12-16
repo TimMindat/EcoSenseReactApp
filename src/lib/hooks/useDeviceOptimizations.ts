@@ -14,6 +14,10 @@ interface DeviceCapabilities {
     rtt: number | null;
     saveData: boolean;
   };
+  memory: {
+    deviceMemory: number | undefined;
+    hardwareConcurrency: number;
+  };
 }
 
 export function useDeviceOptimizations() {
@@ -30,6 +34,10 @@ export function useDeviceOptimizations() {
       downlink: null,
       rtt: null,
       saveData: false
+    },
+    memory: {
+      deviceMemory: (navigator as any).deviceMemory,
+      hardwareConcurrency: navigator.hardwareConcurrency
     }
   });
 
@@ -66,7 +74,11 @@ export function useDeviceOptimizations() {
           height: window.innerHeight,
           pixelRatio: window.devicePixelRatio
         },
-        connection: networkInfo
+        connection: networkInfo,
+        memory: {
+          deviceMemory: (navigator as any).deviceMemory,
+          hardwareConcurrency: navigator.hardwareConcurrency
+        }
       });
     };
 
@@ -79,13 +91,14 @@ export function useDeviceOptimizations() {
     }
 
     // Listen for resize events
-    window.addEventListener('resize', checkCapabilities);
+    const resizeObserver = new ResizeObserver(checkCapabilities);
+    resizeObserver.observe(document.documentElement);
 
     return () => {
       if (connection) {
         connection.removeEventListener('change', checkCapabilities);
       }
-      window.removeEventListener('resize', checkCapabilities);
+      resizeObserver.disconnect();
     };
   }, []);
 

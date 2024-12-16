@@ -7,6 +7,7 @@ interface PerformanceMetrics {
   fcp: number | null;
   lcp: number | null;
   fid: number | null;
+  cls: number | null;
 }
 
 export function usePerformanceMetrics() {
@@ -16,33 +17,46 @@ export function usePerformanceMetrics() {
     componentLoadTimes: {},
     fcp: null,
     lcp: null,
-    fid: null
+    fid: null,
+    cls: null
   });
 
   useEffect(() => {
     // Track Web Vitals
-    const trackWebVitals = () => {
-      const observer = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-          const metricName = entry.name;
-          const value = entry.startTime;
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry) => {
+        const metricName = entry.name;
+        const value = entry.startTime;
 
-          switch (metricName) {
-            case 'first-contentful-paint':
-              setMetrics(prev => ({ ...prev, fcp: value }));
-              break;
-            case 'largest-contentful-paint':
-              setMetrics(prev => ({ ...prev, lcp: value }));
-              break;
-            case 'first-input-delay':
-              setMetrics(prev => ({ ...prev, fid: value }));
-              break;
-          }
-        });
+        switch (metricName) {
+          case 'first-contentful-paint':
+            setMetrics(prev => ({ ...prev, fcp: value }));
+            break;
+          case 'largest-contentful-paint':
+            setMetrics(prev => ({ ...prev, lcp: value }));
+            break;
+          case 'first-input-delay':
+            setMetrics(prev => ({ ...prev, fid: value }));
+            break;
+          case 'cumulative-layout-shift':
+            setMetrics(prev => ({ ...prev, cls: entry.value }));
+            break;
+        }
       });
+    });
 
-      observer.observe({ entryTypes: ['paint', 'first-input', 'layout-shift'] });
-      return observer;
+    observer.observe({ 
+      entryTypes: ['paint', 'first-input', 'layout-shift', 'largest-contentful-paint'] 
+    });
+
+    // Track Memory Usage
+    const trackMemory = () => {
+      if (performance.memory) {
+        setMetrics(prev => ({
+          ...prev,
+          memoryUsage: performance.memory.usedJSHeapSize
+        }));
+      }
     };
 
     // Track Component Performance
@@ -63,25 +77,14 @@ export function usePerformanceMetrics() {
       }));
     };
 
-    // Track Memory Usage
-    const trackMemoryUsage = () => {
-      if (performance.memory) {
-        setMetrics(prev => ({
-          ...prev,
-          memoryUsage: performance.memory.usedJSHeapSize
-        }));
-      }
-    };
-
-    const webVitalsObserver = trackWebVitals();
-    const performanceInterval = setInterval(() => {
+    const interval = setInterval(() => {
+      trackMemory();
       trackComponentPerformance();
-      trackMemoryUsage();
     }, 5000);
 
     return () => {
-      webVitalsObserver.disconnect();
-      clearInterval(performanceInterval);
+      observer.disconnect();
+      clearInterval(interval);
     };
   }, []);
 
